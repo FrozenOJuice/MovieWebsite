@@ -1,7 +1,10 @@
+"""Review models, including voting and update payloads."""
 from pydantic import BaseModel, Field
 from typing import Optional
-from datetime import datetime
-import uuid
+
+
+class Vote(BaseModel):
+    vote: bool  # True if helpful
 
 
 class Usefulness(BaseModel):
@@ -9,28 +12,28 @@ class Usefulness(BaseModel):
     total_votes: int = 0
 
 
-class Review(BaseModel):
-    review_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    movie_id: str
-    user_id: str
+class ReviewBase(BaseModel):
     title: str
-    rating: int
-    date: str = Field(default_factory=lambda: datetime.utcnow().date().isoformat())
+    rating: int = Field(..., ge=1, le=10)
     text: str
-    usefulness: Usefulness = Field(default_factory=Usefulness)
 
 
-class ReviewCreate(BaseModel):
-    title: str
-    rating: int
-    text: str
+class ReviewCreate(ReviewBase):
+    pass
 
 
 class ReviewUpdate(BaseModel):
     title: Optional[str] = None
-    rating: Optional[int] = None
+    rating: Optional[int] = Field(None, ge=1, le=10)
     text: Optional[str] = None
 
 
-class Vote(BaseModel):
-    vote: bool  # True = helpful, False = not helpful
+class Review(BaseModel):
+    review_id: str
+    movie_id: str
+    user_id: str
+    title: str
+    rating: int
+    date: str
+    text: str
+    usefulness: Usefulness = Usefulness()
