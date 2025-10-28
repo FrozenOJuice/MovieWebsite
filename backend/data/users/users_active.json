@@ -1,1 +1,46 @@
-[]
+[
+    {
+        "user_id": "ea5016c7-10dc-4072-ac5f-f6bd54a64712",
+        "username": "admin",
+        "email": "admin@example.com",
+        "hashed_password": "$2b$12$kRjDyE88gZ438rdG8dfkluVlKfoHHllSFM66Vs4frquxxTiFTNFeq",
+        "role": "administrator",
+        "status": "active",
+        "movies_reviewed": [],
+        "watch_later": [
+            "936cd402-602c-4931-b8ac-37e0e8799b26"
+        ],
+        "penalties": []
+    },
+    {
+        "user_id": "9b0bef23-b310-40e0-ac73-ff4d21d71605",
+        "username": "member",
+        "email": "member@example.com",
+        "hashed_password": "$2b$12$axyPZP70Dp8J1LEpXcubhO2XCfv0VA0/q.I15ccjw9F3c/dQbROP2",
+        "role": "member",
+        "status": "active",
+        "movies_reviewed": [
+            "1cc2b39e-f5cf-41aa-aa4c-9e7d267db74a"
+        ],
+        "watch_later": [
+            "1cc2b39e-f5cf-41aa-aa4c-9e7d267db74a",
+            "936cd402-602c-4931-b8ac-37e0e8799b26"
+        ],
+        "penalties": []
+    },
+    {
+        "user_id": "bd5c2f11-22f3-4a17-a7d6-a473affc5807",
+        "username": "test",
+        "email": "test@example.com",
+        "hashed_password": "$2b$12$f5B.hZtb3pmmDBXQTt0CY.ZhzUziXcBqawxd4LdDBguOR3DMFNvo6",
+        "role": "member",
+        "status": "active",
+        "movies_reviewed": [
+            "936cd402-602c-4931-b8ac-37e0e8799b26"
+        ],
+        "watch_later": [],
+        "penalties": [
+            "8f83c656-1b79-4c4e-a82e-289046e5dc9e"
+        ]
+    }
+]

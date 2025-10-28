@@ -4,7 +4,9 @@ from typing import Dict, Any, List, Optional
 from passlib.context import CryptContext
 from fastapi import HTTPException
 from backend.authentication import utils as auth_utils
+from backend.authentication.schemas import UserCreate, UserToken
 from backend.users import schemas
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -17,7 +19,7 @@ def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
     return auth_utils.get_user_by_id(user_id)
 
 
-def add_user(new_user: schemas.UserCreate) -> Dict[str, Any]:
+def add_user(new_user: UserCreate) -> Dict[str, Any]:
     users = load_active_users()
     if any(u.get("email") == new_user.email for u in users):
         raise HTTPException(status_code=400, detail="Email already registered.")

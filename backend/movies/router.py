@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse
 from typing import List, Optional
 import tempfile, os
 from backend.authentication.security import get_current_user
+from backend.authentication.schemas import UserToken
 from backend.movies import utils, schemas
 from backend.core.authz import require_role, block_if_penalized
 from backend.core.jsonio import save_json
@@ -12,7 +13,7 @@ router = APIRouter(prefix="/movies", tags=["Movies"])
 
 
 @router.get("/", response_model=List[schemas.Movie])
-def list_movies(params: schemas.MovieSearchParams = Depends(), current_user: schemas.UserToken = Depends(get_current_user)):
+def list_movies(params: schemas.MovieSearchParams = Depends(), current_user: UserToken = Depends(get_current_user)):
     """List, search, sort, and paginate movies."""
     movies = utils.load_movies()
     movies = utils.filter_movies(movies, params)
@@ -20,16 +21,8 @@ def list_movies(params: schemas.MovieSearchParams = Depends(), current_user: sch
     return utils.paginate_movies(movies, params.page, params.limit)
 
 
-@router.get("/{movie_id}", response_model=schemas.Movie)
-def get_movie(movie_id: str, current_user: schemas.UserToken = Depends(get_current_user)):
-    movie = utils.get_movie(movie_id)
-    if not movie:
-        raise HTTPException(status_code=404, detail="Movie not found.")
-    return movie
-
-
 @router.get("/download")
-def download_movies(background_tasks: BackgroundTasks, current_user: schemas.UserToken = Depends(get_current_user)):
+def download_movies(background_tasks: BackgroundTasks, current_user: UserToken = Depends(get_current_user)):
     """Download all movies as a single JSON file (admin only)."""
     require_role(current_user, ["administrator"])
     movies = utils.load_movies()
@@ -43,7 +36,7 @@ def download_movies(background_tasks: BackgroundTasks, current_user: schemas.Use
 
 
 @router.get("/watch-later", response_model=schemas.WatchLaterResponse)
-def get_watch_later(current_user: schemas.UserToken = Depends(get_current_user), user_id: Optional[str] = Query(None)):
+def get_watch_later(current_user: UserToken = Depends(get_current_user), user_id: Optional[str] = Query(None)):
     """View watch-later list (admin can specify another user ID)."""
     if user_id and current_user.role != "administrator":
         raise HTTPException(status_code=403, detail="Not authorized to view another user's list.")
@@ -52,9 +45,9 @@ def get_watch_later(current_user: schemas.UserToken = Depends(get_current_user),
     return {"user_id": target_id, "watch_later": movies}
 
 
-@block_if_penalized(["suspension"])
 @router.patch("/watch-later")
-async def modify_watch_later(update: schemas.WatchLaterUpdate, current_user: schemas.UserToken = Depends(get_current_user), user_id: Optional[str] = Query(None)):
+@block_if_penalized(["suspension"])
+async def modify_watch_later(update: schemas.WatchLaterUpdate, current_user: UserToken = Depends(get_current_user), user_id: Optional[str] = Query(None)):
     """Add or remove movies from watch-later list. Admin may target another user."""
     if update.action not in ["add", "remove"]:
         raise HTTPException(status_code=400, detail="Invalid action. Use 'add' or 'remove'.")
@@ -68,3 +61,11 @@ async def modify_watch_later(update: schemas.WatchLaterUpdate, current_user: sch
     target_id = user_id or current_user.user_id
     utils.update_watch_later(target_id, update.movie_id, update.action)
     return {"message": f"Movie {update.action}ed successfully."}
+
+
+@router.get("/{movie_id}", response_model=schemas.Movie)
+def get_movie(movie_id: str, current_user: UserToken = Depends(get_current_user)):
+    movie = utils.get_movie(movie_id)
+    if not movie:
+        raise HTTPException(status_code=404, detail="Movie not found.")
+    return movie

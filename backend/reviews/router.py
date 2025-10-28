@@ -11,7 +11,7 @@ router = APIRouter(prefix="/reviews", tags=["Reviews"])
 @router.get("/{movie_id}", response_model=List[schemas.Review])
 def list_reviews(
     movie_id: str,
-    rating: Optional[int] = Query(None, description="Filter by rating (1–10)"),
+    rating: Optional[int] = Query(None, description="Filter by rating (1-10)"),
     sort_by: str = Query("date", description="Sort by date, rating, helpful, total_votes"),
     order: str = Query("desc", description="Order: asc or desc"),
     skip: int = Query(0, ge=0),
@@ -30,8 +30,9 @@ def get_review(movie_id: str, review_id: str, current_user=Depends(get_current_u
     return review
 
 
-@block_if_penalized(["review_ban", "posting_ban", "suspension"])
+
 @router.post("/{movie_id}", response_model=schemas.Review)
+@block_if_penalized(["review_ban", "posting_ban", "suspension"])
 async def add_review(movie_id: str, review_data: schemas.ReviewCreate, current_user=Depends(get_current_user)):
     """Add a new review for a movie; one review per user per movie."""
     try:
@@ -40,8 +41,9 @@ async def add_review(movie_id: str, review_data: schemas.ReviewCreate, current_u
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@block_if_penalized(["review_ban", "posting_ban", "suspension"])
+
 @router.patch("/{movie_id}/{review_id}", response_model=schemas.Review)
+@block_if_penalized(["review_ban", "posting_ban", "suspension"])
 async def edit_review(movie_id: str, review_id: str, updates: schemas.ReviewUpdate, current_user=Depends(get_current_user)):
     """Edit a review; allowed for the author or an administrator."""
     review = utils.get_review(movie_id, review_id)
@@ -66,6 +68,7 @@ def delete_review(movie_id: str, review_id: str, current_user=Depends(get_curren
 
 
 @router.post("/{movie_id}/{review_id}/vote", response_model=schemas.Review)
+@block_if_penalized(["suspension"])
 def vote_review(movie_id: str, review_id: str, vote: schemas.Vote, current_user=Depends(get_current_user)):
     """Vote whether a review was helpful or not."""
     updated = utils.add_vote(movie_id, review_id, vote)

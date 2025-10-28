@@ -2,6 +2,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm, HTTPAuthorizationCredentials, HTTPBearer
 from backend.authentication import schemas, utils, security
+from backend.core import tokens
 import uuid
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -49,7 +50,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 @router.post("/logout")
 def logout(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
     """Revoke the current access token."""
-    security.revoke_token(credentials.credentials)
+    tokens.revoke_token(credentials.credentials)
     return {"message": "Logged out successfully."}
 
 
@@ -60,12 +61,6 @@ def refresh_token(current_user: schemas.TokenData = Depends(security.get_current
         data={"sub": current_user.user_id, "role": current_user.role, "status": current_user.status}
     )
     return {"access_token": token, "token_type": "bearer"}
-
-
-@router.get("/whoami", response_model=schemas.TokenData)
-def whoami(current_user=Depends(security.get_current_user)):
-    """Return the identity of the current user."""
-    return current_user
 
 
 @router.post("/password/request")

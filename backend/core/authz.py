@@ -1,33 +1,52 @@
-"""Shared authorization and penalty-check helpers for routers."""
-from fastapi import HTTPException, status
+"""Authorization helpers for role and penalty checks."""
 from functools import wraps
+from fastapi import Depends, HTTPException, status
+from backend.authentication.security import get_current_user
 from backend.penalties import utils as penalty_utils
+from backend.users import utils as user_utils
+from backend.penalties import schemas
 
 
-def require_role(user, allowed_roles: list[str]) -> None:
-    """Raise 403 if the current user's role is not in allowed_roles."""
+
+def require_role(user, allowed_roles: list[str]):
+    """Raise 403 if user does not have one of the allowed roles."""
     if user.role not in allowed_roles:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied."
+            detail=f"Access denied: requires one of {allowed_roles}.",
         )
+
 
 
 def block_if_penalized(blocked_types: list[str]):
     """
-    Decorator for FastAPI route handlers that blocks access when a user has
-    an active penalty of any type in `blocked_types`. Expects the route to
-    receive `current_user` via Depends(get_current_user).
+    Decorator that blocks actions if the current user has an active penalty
+    matching one of the specified blocked types.
+
+    Example:
+        @router.post("/reviews")
+        @block_if_penalized(["review_ban", "suspension"])
+        async def create_review(...):
+            ...
     """
     def decorator(func):
         @wraps(func)
-        async def wrapper(*args, **kwargs):
-            current_user = kwargs.get("current_user")
-            if not current_user:
-                raise HTTPException(status_code=401, detail="User context missing.")
-            restriction = penalty_utils.check_active_penalty(current_user.user_id, blocked_types)
-            if restriction:
-                raise HTTPException(status_code=403, detail=restriction)
-            return await func(*args, **kwargs)
+        async def wrapper(*args, current_user=Depends(get_current_user), **kwargs):
+            # Get user's active penalties (resolves expiries)
+            penalties = penalty_utils.get_penalties_for_user(current_user.user_id)
+            active_penalties = [
+                p for p in penalties
+                if p.status == schemas.PenaltyStatus.active and not p.has_expired()
+            ]
+
+            # Check if any match blocked types
+            for p in active_penalties:
+                if p.type.value in blocked_types:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail=f"Action blocked due to active {p.type.value} penalty."
+                    )
+
+            return await func(*args, current_user=current_user, **kwargs)
         return wrapper
     return decorator

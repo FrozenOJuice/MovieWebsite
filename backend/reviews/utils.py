@@ -1,5 +1,5 @@
 """Review storage and user linkage utilities."""
-import os, glob
+import os, glob, uuid
 from datetime import datetime
 from typing import List, Dict, Optional
 from backend.core.paths import REVIEWS_DIR
@@ -30,30 +30,38 @@ def user_already_reviewed(movie_id: str, user_id: str) -> bool:
     return False
 
 
-def add_review(movie_id: str, review_data: schemas.ReviewCreate, user_id: str) -> Dict:
+def add_review(movie_id: str, review_data, user_id: str):
+    """Add a new review for a movie; ensures unique ID and timestamp."""
     reviews = load_reviews(movie_id)
+
+    # Prevent duplicate by same user
     if any(r.get("user_id") == user_id for r in reviews):
         raise ValueError("User already has a review for this movie.")
 
-    new_review = schemas.Review(
-        movie_id=movie_id,
-        user_id=user_id,
-        title=review_data.title,
-        rating=review_data.rating,
-        text=review_data.text,
-    ).dict()
+    new_review = {
+        "review_id": str(uuid.uuid4()),
+        "movie_id": movie_id,
+        "user_id": user_id,
+        "title": review_data.title,
+        "rating": review_data.rating,
+        "text": review_data.text,
+        "date": datetime.utcnow().date().isoformat(),
+        "usefulness": {"helpful": 0, "total_votes": 0},
+    }
 
     reviews.append(new_review)
     save_reviews(movie_id, reviews)
 
-    users = load_active_users()
+    # Optionally add the movie_id to user's movies_reviewed
+    from backend.authentication import utils as user_utils
+    users = user_utils.load_active_users()
     for u in users:
-        if u.get("user_id") == user_id:
+        if u["user_id"] == user_id:
             u.setdefault("movies_reviewed", [])
             if movie_id not in u["movies_reviewed"]:
                 u["movies_reviewed"].append(movie_id)
-            break
-    save_active_users(users)
+    user_utils.save_active_users(users)
+
     return new_review
 
 

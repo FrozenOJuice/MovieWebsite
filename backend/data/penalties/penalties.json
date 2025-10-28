@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "penalty_id": "8f83c656-1b79-4c4e-a82e-289046e5dc9e",
+        "user_id": "bd5c2f11-22f3-4a17-a7d6-a473affc5807",
+        "type": "review_ban",
+        "severity": "low",
+        "reason": "Bad language",
+        "issued_by": "ea5016c7-10dc-4072-ac5f-f6bd54a64712",
+        "issued_at": "2025-10-28T23:27:13.981775",
+        "expires_at": "2025-10-29T23:27:13.981732",
+        "status": "active",
+        "notes": null,
+        "resolved_by": null,
+        "resolved_at": null
+    }
+]

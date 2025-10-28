@@ -91,9 +91,14 @@ def delete_penalty(penalty_id: str) -> None:
         _unlink_penalty_from_user(tgt_user, penalty_id)
 
 
-def check_active_penalty(user_id: str, blocked_types: List[str]) -> Optional[str]:
-    for p in get_penalties_for_user(user_id):
-        if p.status == "active" and p.type in blocked_types:
-            remaining = p.time_remaining or "Unknown duration"
-            return f"Action blocked due to active {p.type} ({p.reason}) — {remaining}."
+def check_active_penalty(user_id: str, blocked_types: list[str]) -> str | None:
+    """
+    Return a message if the user has an active penalty of the given types.
+    Otherwise return None.
+    """
+    penalties = _load()
+    for p in penalties:
+        if p["user_id"] == user_id and p["status"] == "active" and p["type"] in blocked_types:
+            return f"User has an active {p['type']} penalty"
     return None
+

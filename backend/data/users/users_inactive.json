@@ -23184,8 +23184,8 @@
     },
     {
         "user_id": "6234873e-33ad-48bd-9a84-98ec93ecef5e",
-        "username": "Hörnla",
-        "email": "Hörnla@inactive.com",
+        "username": "H\u00f6rnla",
+        "email": "H\u00f6rnla@inactive.com",
         "hashed_password": "inactive_user",
         "role": "member",
         "status": "inactive",

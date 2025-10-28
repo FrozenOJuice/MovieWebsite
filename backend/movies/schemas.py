@@ -1,5 +1,5 @@
 """Movie data models and search parameters."""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 from typing import List, Optional
 
 
@@ -17,7 +17,6 @@ class Movie(BaseModel):
     total_user_reviews: Optional[int] = None
     total_critic_reviews: Optional[int] = None
     total_rating_count: Optional[int] = None
-    source_folder: Optional[str] = None
 
 
 class MovieSearchParams(BaseModel):
@@ -43,3 +42,4 @@ class WatchLaterUpdate(BaseModel):
 class WatchLaterResponse(BaseModel):
     user_id: str
     watch_later: List[Movie]
+

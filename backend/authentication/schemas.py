@@ -25,7 +25,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    user_id: str = Field(..., alias="sub", description="Subject (user id) in the JWT")
+    user_id: str
     role: str
     status: str
 

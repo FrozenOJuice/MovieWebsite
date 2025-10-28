@@ -1,4 +1,5 @@
 """Penalty management routes for administrators and moderators."""
+import uuid
 from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import List, Optional
 from backend.penalties import utils, schemas
@@ -29,11 +30,17 @@ def get_user_penalties(user_id: str, current_user=Depends(get_current_user)):
 def issue_penalty(payload: schemas.PenaltyCreate, current_user=Depends(get_current_user)):
     require_role(current_user, ["administrator", "moderator"])
     expires_at = schemas.calculate_expiry(payload.type, payload.severity, payload.duration_days)
+
     penalty = schemas.Penalty(
-        **payload.dict(exclude={"duration_days"}),
+        penalty_id=str(uuid.uuid4()), 
+        user_id=payload.user_id,
+        type=payload.type,
+        severity=payload.severity,
+        reason=payload.reason,
         issued_by=current_user.user_id,
         expires_at=expires_at,
     )
+
     return utils.add_penalty(penalty)
 
 

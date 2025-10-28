@@ -14,8 +14,8 @@ def get_summary(current_user=Depends(get_current_user)):
     return utils.get_summary()
 
 
-@block_if_penalized(["report_ban", "posting_ban", "suspension"])
 @router.post("/", response_model=schemas.Report)
+@block_if_penalized(["report_ban", "posting_ban", "suspension"])
 async def submit_report(report: schemas.ReportCreate, current_user=Depends(get_current_user)):
     """Submit a report; allowed for member and critic."""
     require_role(current_user, ["member", "critic"])
