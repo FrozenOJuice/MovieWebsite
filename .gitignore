@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-# Distribution / packaging
+# Distribution / packagingpip3 install fastapi uvicorn pytest httpx pydantic passlib==1.7.4 bcrypt==4.0.1 python-jose pyjwt python-multipart logging-config python-dotenv “pydantic[email]”
 .Python
 build/
 develop-eggs/
@@ -137,12 +137,12 @@ celerybeat.pid
 # Environments
 .env
 .envrc
-.venv
+.movieReviewVenv
 env/
-venv/
+movieReviewVenv/
 ENV/
 env.bak/
-venv.bak/
+movieReviewVenv.bak/
 
 # Spyder project settings
 .spyderproject
