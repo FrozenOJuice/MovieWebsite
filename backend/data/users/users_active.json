@@ -42,5 +42,27 @@
         "penalties": [
             "8f83c656-1b79-4c4e-a82e-289046e5dc9e"
         ]
+    },
+    {
+        "user_id": "69517310-3258-497e-b071-ce01ade3f525",
+        "username": "joel",
+        "email": "joel@example.com",
+        "hashed_password": "$2b$12$Bby62IbJPff2EXccNE4MT.ezZGRJE2wEUZ11RvdAVpoDQcfcyEwTK",
+        "role": "member",
+        "status": "active",
+        "movies_reviewed": [],
+        "watch_later": [],
+        "penalties": []
+    },
+    {
+        "user_id": "7a4498b0-df15-422f-a96e-a59c86963695",
+        "username": "nekayah",
+        "email": "nekayah@example.com",
+        "hashed_password": "$2b$12$fWtBfiHxKJsIo9a8nAu8O.BrACyMEL7RCVVuQLiq5qevp8Z.Z8vxK",
+        "role": "member",
+        "status": "active",
+        "movies_reviewed": [],
+        "watch_later": [],
+        "penalties": []
     }
 ]

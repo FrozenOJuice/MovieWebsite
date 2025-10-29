@@ -1,0 +1,44 @@
+/* frontend/app/page.css */
+
+.landing {
+    text-align: center;
+    padding: 8rem 2rem;
+    background: linear-gradient(to bottom right, #faf5ff, #f9f9fc);
+  }
+  
+  .landing-content {
+    max-width: 650px;
+    margin: auto;
+  }
+  
+  .landing h2 {
+    font-size: 2.4rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+  
+  .landing p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .landing-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .btn-outline {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+  
+  .btn-outline:hover {
+    background: var(--primary);
+    color: white;
+  }
+  

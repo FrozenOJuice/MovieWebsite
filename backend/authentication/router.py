@@ -11,11 +11,37 @@ bearer_scheme = HTTPBearer()
 
 @router.post("/register", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
 def register(user: schemas.UserCreate):
-    """Register a new user (no penalties/role checks here)."""
+    """Register a new user (with username and password validation)."""
+
+    # --- Username Validation ---
+    if len(user.username) < 3 or len(user.username) > 20:
+        raise HTTPException(status_code=400, detail="Username must be between 3 and 20 characters long.")
+    if not user.username.isalnum():
+        raise HTTPException(status_code=400, detail="Username can only contain letters and numbers (no spaces or symbols).")
+
+    # --- Password Validation ---
+    password = user.password
+    if len(password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters long.")
+    if not any(c.isupper() for c in password):
+        raise HTTPException(status_code=400, detail="Password must include at least one uppercase letter.")
+    if not any(c.islower() for c in password):
+        raise HTTPException(status_code=400, detail="Password must include at least one lowercase letter.")
+    if not any(c.isdigit() for c in password):
+        raise HTTPException(status_code=400, detail="Password must include at least one number.")
+    if not any(c in "!@#$%^&*()-_=+[]{}|;:',.<>?/`~" for c in password):
+        raise HTTPException(status_code=400, detail="Password must include at least one special character.")
+
+    # --- Email Validation ---
+    if "@" not in user.email or "." not in user.email.split("@")[-1]:
+        raise HTTPException(status_code=400, detail="Invalid email address format.")
+
+    # --- Existing user check ---
     exists, message = utils.user_exists(user.username, user.email)
     if exists:
         raise HTTPException(status_code=400, detail=message)
 
+    # --- Create User ---
     new_user = {
         "user_id": str(uuid.uuid4()),
         "username": user.username,
@@ -27,8 +53,11 @@ def register(user: schemas.UserCreate):
         "watch_later": [],
         "penalties": [],
     }
+
     utils.add_user(new_user, active=True)
+
     return {k: new_user[k] for k in ("user_id", "username", "email", "role", "status")}
+
 
 
 @router.post("/login", response_model=schemas.Token)
@@ -95,3 +124,8 @@ def reset_password(token: str, new_password: str):
     utils.save_active_users(active)
     utils.save_inactive_users(inactive)
     return {"message": "Password successfully reset"}
+
+
+@router.get("/me")
+def read_current_user(current_user: schemas.UserToken = Depends(security.get_current_user)):
+    return current_user
