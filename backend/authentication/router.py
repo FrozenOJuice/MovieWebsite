@@ -63,9 +63,9 @@ def register(user: schemas.UserCreate):
 @router.post("/login", response_model=schemas.Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """Authenticate user and issue an access token."""
-    user = utils.get_user_by_username(form_data.username)
+    user = utils.get_user_by_username_or_email(form_data.username)
     if not user or not security.verify_password(form_data.password, user["hashed_password"]):
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+        raise HTTPException(status_code=401, detail="Invalid username/email or password")
 
     if user["status"] != schemas.UserStatus.ACTIVE.value:
         raise HTTPException(status_code=403, detail="Account is deactivated")

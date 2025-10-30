@@ -55,10 +55,10 @@
         "penalties": []
     },
     {
-        "user_id": "7a4498b0-df15-422f-a96e-a59c86963695",
+        "user_id": "86dd755a-27ee-4a6f-9730-7e94fa5566c5",
         "username": "nekayah",
         "email": "nekayah@example.com",
-        "hashed_password": "$2b$12$fWtBfiHxKJsIo9a8nAu8O.BrACyMEL7RCVVuQLiq5qevp8Z.Z8vxK",
+        "hashed_password": "$2b$12$NR.0Op6voGX471/CJGBCKO2CD41w4ayF0mqCxuni1HSVi5pELa5iK",
         "role": "member",
         "status": "active",
         "movies_reviewed": [],

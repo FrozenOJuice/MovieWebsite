@@ -1,0 +1,158 @@
+/* Root homepage styling for WatchWorthy */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body {
+  background-color: #f8f8fc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+}
+
+/* Ensure no scrolling unless content exceeds viewport */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Header */
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #5a2d82;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.logo:hover {
+  opacity: 0.8;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.btn-register {
+  background-color: #5a2d82;
+  color: white;
+}
+.btn-register:hover {
+  background-color: #6e3aa0;
+}
+
+.btn-login {
+  border: 1px solid #5a2d82;
+  color: #5a2d82;
+}
+.btn-login:hover {
+  background-color: #5a2d82;
+  color: white;
+}
+
+/* Main content */
+.home-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1rem;
+  overflow: hidden;
+}
+
+.welcome h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 0.8rem;
+}
+
+.welcome p {
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background-color: #5a2d82;
+  color: white;
+  padding: 0.8rem 1.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.btn-primary:hover {
+  background-color: #6f3fa8;
+}
+
+.btn-secondary {
+  border: 1px solid #5a2d82;
+  color: #5a2d82;
+  padding: 0.8rem 1.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-secondary:hover {
+  background-color: #5a2d82;
+  color: white;
+}
+
+/* Footer */
+.home-footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: white;
+  border-top: 1px solid #eaeaea;
+  font-size: 0.9rem;
+  color: #666;
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .home-header {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .welcome h1 {
+    font-size: 2rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+}

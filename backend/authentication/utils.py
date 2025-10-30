@@ -60,10 +60,16 @@ def add_user(user: Dict[str, Any], *, active: bool = True) -> None:
 def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
     return next((u for u in load_all_users() if u.get("user_id") == user_id), None)
 
-
 def get_user_by_username(username: str) -> Optional[Dict[str, Any]]:
     return next((u for u in load_all_users() if u.get("username") == username), None)
 
+def get_user_by_username_or_email(identifier: str) -> Optional[Dict[str, Any]]:
+    """Return a user by either username or email (case-insensitive for email)."""
+    users = load_all_users()
+    for u in users:
+        if u.get("username") == identifier or u.get("email").lower() == identifier.lower():
+            return u
+    return None
 
 def update_user_status(user_id: str, status: schemas.UserStatus) -> bool:
     """Move user between active/inactive and update status."""

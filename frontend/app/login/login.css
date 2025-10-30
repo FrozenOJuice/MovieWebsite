@@ -1,0 +1,5 @@
+@import '../register/register.css';
+
+.auth-form input::placeholder {
+  color: #888;
+}
