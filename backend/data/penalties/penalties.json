@@ -12,5 +12,19 @@
         "notes": null,
         "resolved_by": null,
         "resolved_at": null
+    },
+    {
+        "penalty_id": "6cde6335-3e9a-4734-b83d-46e2fdba2d08",
+        "user_id": "9b0bef23-b310-40e0-ac73-ff4d21d71605",
+        "type": "suspension",
+        "severity": "low",
+        "reason": "string",
+        "issued_by": "ea5016c7-10dc-4072-ac5f-f6bd54a64712",
+        "issued_at": "2025-11-18T16:54:45.872371",
+        "expires_at": "2025-11-19T16:54:45.872218",
+        "status": "active",
+        "notes": null,
+        "resolved_by": null,
+        "resolved_at": null
     }
 ]

@@ -92,10 +92,6 @@ def delete_penalty(penalty_id: str) -> None:
 
 
 def check_active_penalty(user_id: str, blocked_types: list[str]) -> str | None:
-    """
-    Return a message if the user has an active penalty of the given types.
-    Otherwise return None.
-    """
     penalties = _load()
     for p in penalties:
         if p["user_id"] == user_id and p["status"] == "active" and p["type"] in blocked_types:

@@ -1,7 +1,5 @@
-"""Movie data models and search parameters."""
 from pydantic import BaseModel, EmailStr, Field
 from typing import List, Optional
-
 
 class Movie(BaseModel):
     movie_id: str
